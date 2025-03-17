@@ -1,20 +1,23 @@
-const express=require("express")
-const app=express()
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
 
-const mongoose=require("mongoose")
-const User=require("./Models/User")
-const cors=require("cors")
-const connectDB=require('./Models/DB')
-connectDB()
-app.use(cors())
-app.use(express.json())
+const connectDB = require('./Models/DB');
+const authRoutes = require('./routes/authRoutes');
 
-app.post('/Signup',async(req,res)=>{
-    let user=new User(req.body)
-    let result=await user.save();
-    res.send(result)
-})
+const app = express();
 
-app.listen(5000,()=>{
-    console.log("Server is started on the port")
-})
+
+connectDB();
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Routes
+app.use("/", authRoutes);
+
+// Start the server
+app.listen(5000, () => {
+    console.log("Server is started on port 5000");
+});
